@@ -2,7 +2,10 @@ using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using NotesApp.Data;
+using NotesApp.Repositories.Implementations;
+using NotesApp.Repositories.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +18,7 @@ builder.Services.AddDbContext<DbManager>(
         builder.Configuration.GetConnectionString("DefaultConnection")));
 // LocalStorage for themes toggle
 builder.Services.AddBlazoredLocalStorage();
+builder.Services.AddScoped<INoteRepository, NoteRepository>();
 
 var app = builder.Build();
 

@@ -1,32 +1,68 @@
 ﻿@page "/"
 
 <PageTitle>Index</PageTitle>
+@if(Notes == null)
+{
+	<h1>Loading...</h1>
+}
+else
+{
+	foreach (var note in Notes)
+	{
+		<h1>@note.Title</h1>
+		<br/>
+	}
+}
+	@code {
+	private List<NoteDTO> Notes = new List<NoteDTO>()
+	{
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,08,19), Text = "Default text for note-1", Title = "Title-1"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,7,2), Text = "Default text for note-2", Title = "Title-2"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,5,3), Text = "Default text for note-3", Title = "Title-3"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,3,16), Text = "Default text for note-4", Title = "Title-4"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,11,24), Text = "Default text for note-5", Title = "Title-5"},
+		new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023,12,20), Text = "Default text for note-6", Title = "Title-6"}
+	};
 
-<div class="py-4 rounded shadow-md w-60 sm:w-80 animate-pulse dark:bg-gray-900">
-	<div class="flex p-4 space-x-4 sm:px-8">
-		<div class="flex-shrink-0 w-16 h-16 rounded-full dark:bg-gray-700"></div>
-		<div class="flex-1 py-2 space-y-4">
-			<div class="w-full h-3 rounded dark:bg-gray-700"></div>
-			<div class="w-5/6 h-3 rounded dark:bg-gray-700"></div>
-		</div>
-	</div>
-	<div class="p-4 space-y-4 sm:px-8">
-		<div class="w-full h-4 rounded dark:bg-gray-700"></div>
-		<div class="w-full h-4 rounded dark:bg-gray-700"></div>
-		<div class="w-3/4 h-4 rounded dark:bg-gray-700"></div>
-	</div>
-</div>
-<div class="py-4 rounded shadow-md w-60 sm:w-80 animate-pulse dark:bg-gray-900">
-	<div class="flex p-4 space-x-4 sm:px-8">
-		<div class="flex-shrink-0 w-16 h-16 rounded-full dark:bg-gray-700"></div>
-		<div class="flex-1 py-2 space-y-4">
-			<div class="w-full h-3 rounded dark:bg-gray-700"></div>
-			<div class="w-5/6 h-3 rounded dark:bg-gray-700"></div>
-		</div>
-	</div>
-	<div class="p-4 space-y-4 sm:px-8">
-		<div class="w-full h-4 rounded dark:bg-gray-700"></div>
-		<div class="w-full h-4 rounded dark:bg-gray-700"></div>
-		<div class="w-3/4 h-4 rounded dark:bg-gray-700"></div>
-	</div>
-</div>
+}
