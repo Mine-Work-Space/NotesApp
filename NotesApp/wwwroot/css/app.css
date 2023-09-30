@@ -1,0 +1,140 @@
+﻿body {
+    background: #111827 !important;
+}
+/* Style for info when server stopped or etc..*/
+.my-reconnect-modal > div {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    overflow: hidden;
+    background-color: #fff;
+    opacity: 0.8;
+    text-align: center;
+    font-weight: bold;
+}
+
+.components-reconnect-hide > div {
+    display: none;
+}
+
+.components-reconnect-show > div {
+    display: none;
+}
+
+.components-reconnect-show > .show {
+    display: block;
+}
+
+.components-reconnect-failed > div {
+    display: none;
+}
+
+.components-reconnect-failed > .failed {
+    display: block;
+}
+
+.components-reconnect-refused > div {
+    display: none;
+}
+
+.components-reconnect-refused > .refused {
+    display: block;
+}
+
+/* note cards style*/
+.my-card {
+    background: #1f2937;
+    font-weight: 200;
+    color: #f3f4e9;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0px 10px 30px #111827;
+    margin: 23px 5px;
+    width: 100%;
+    min-height: 10%;
+    transition: 400ms;
+}
+
+.my-card:hover {
+    box-shadow: 0px 5px 5px #34455d;
+}
+
+.note-title {
+    font-weight: 400;
+}
+
+.note-footer {
+    margin: 0 auto;
+    padding-bottom: .125rem;
+    width: 80%;
+}
+
+.note-footer ul {
+    list-style: none;
+    display: flex;
+    flex: row wrap;
+    justify-content: flex-end;
+    padding-left: 0;
+}
+
+.note-footer li:first-child {
+    margin-right: auto;
+}
+
+.note-footer li + li {
+    margin-left: .5rem;
+}
+
+.note-text {
+    font-size: medium;
+}
+.note-footer li {
+    padding: 4px;
+    font-size: .75rem;
+    height: 2.3rem;
+    letter-spacing: 1px;
+    line-height: 1.5rem;
+    text-align: center;
+    text-transform: uppercase;
+    position: relative;
+    white-space: nowrap;
+}
+
+hr {
+    border: 0;
+    height: 1.5px;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), #839cc3, rgba(0, 0, 0, 0));
+}
+
+.view-btn {
+    color: black;
+    background: #e879f9;
+}
+
+@media screen and (max-device-width: 1400px) and (max-device-width: 768px) {
+    .my-text {
+        display: none;
+    }
+    .my-container {
+        margin-top: 135px !important;
+    }
+}
+/* searching term input style */
+.my-input {
+    color: white !important;
+    text-decoration: none !important;
+    background: #3f474f;
+    transition: 400ms;
+}
+
+.my-input:focus {
+    background: #5d6975;
+}
+
+input::placeholder {
+    color: white !important;
+    opacity: 0.2 !important;
+}
