@@ -2,17 +2,20 @@
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 
 <PageTitle>Notes sharing</PageTitle>
-<nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-    <div class="d-flex navbar-brand col-sm-3 col-md-2 mr-0 w-10 ms-5">
+<nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-2 shadow">
+    <div class="d-flex navbar-brand col-sm-3 col-md-3 mr-0 w-10 ms-5">
         <img height="40" width="40" src="/icons/icon.svg" alt="."/>
-        <a class="navbar-brand col-sm-3 col-md-2 mr-0 w-10" href="#">Notes Sharing</a>
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0 w-10 ms-3" href="#">Notes Sharing</a>
     </div>
-    <input class="mx-auto form-control form-control-dark w-90" type="text" placeholder="Enter search term" aria-label="Search">
+    <input class="mx-auto my-input form-control w-90 text-decoration-none border rounded-2"
+             type="text" placeholder="Enter search term">
     <h5 class="text-nowrap px-3 ms-5 navbar-brand col-sm-3 col-md-2 mr-0 w-10 text-white mt-2">Total notes: 100</h5>
 </nav>
-<div class="container">
+<br/>
+<div class="my-container container mt-5">
     <div class="row">
-        <main role="main" class=" ml-sm-auto col-lg-10 px-4">
+        <br/>
+        <main role="main" class="ml-sm-auto col-lg-12 px-4">
             @Body
         </main>
     </div>
