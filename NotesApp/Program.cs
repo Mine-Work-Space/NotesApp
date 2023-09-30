@@ -1,5 +1,7 @@
+using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.EntityFrameworkCore;
 using NotesApp.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,7 +9,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<WeatherForecastService>();
+// Set connection to db
+builder.Services.AddDbContext<DbManager>(
+    options => options.UseNpgsql(
+        builder.Configuration.GetConnectionString("DefaultConnection")));
+// LocalStorage for themes toggle
+builder.Services.AddBlazoredLocalStorage();
 
 var app = builder.Build();
 
