@@ -43,7 +43,6 @@
 .components-reconnect-refused > .refused {
     display: block;
 }
-
 /* note cards style*/
 .my-card {
     background: #1f2937;
@@ -109,7 +108,7 @@ hr {
     background-image: linear-gradient(to right, rgba(0, 0, 0, 0), #839cc3, rgba(0, 0, 0, 0));
 }
 
-.view-btn {
+.purple-btn {
     color: black;
     background: #e879f9;
 }
@@ -137,4 +136,11 @@ hr {
 input::placeholder {
     color: white !important;
     opacity: 0.2 !important;
+}
+/* add-button style */
+.add-button {
+    transition: transform .8s ease-in-out;
+}
+.add-button:hover {
+    transform: rotate(360deg);
 }

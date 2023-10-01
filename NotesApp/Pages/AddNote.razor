@@ -1,0 +1,62 @@
+﻿@using NotesApp.Models.DbModels;
+@using NotesApp.Repositories.Implementations;
+@using NotesApp.Repositories.Interfaces;
+@inject SweetAlertService Swal;
+@inject INoteRepository noteRepository;
+
+<div class="modal fade" id="addNoteModal" style="background: #2c3b4f; " tabindex="-1" aria-labelledby="addNoteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="background:#f2f2f2 !important">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addNoteLabel">Add new note</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <EditForm Model="Note" OnValidSubmit="HandleSubmit">
+                <DataAnnotationsValidator />
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="titleSpan">Title</span>
+                        </div>
+                        <InputText type="text" class="form-control" id="title" @bind-Value="Note.Title"></InputText>
+                    </div>
+                    <ValidationMessage class="text-danger" TValue="string" For="@(() => Note.Title)" />
+                    <div class="mb-3">
+                        <label for="Text" class="form-label">Note description</label>
+                        <InputTextArea class="form-control" id="Text" rows="10" @bind-Value="Note.Text" maxlength="8192"></InputTextArea>
+                        <ValidationMessage class="text-danger" TValue="string" For="@(() => Note.Text)" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn  purple-btn d-inline-flex">Add note</button>
+                    <button type="button" class="btn btn-secondary " data-bs-dismiss="modal">Close</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+@code {
+    Note Note = new();
+    private bool isLoading = false;
+    private async void HandleSubmit()
+    {
+        isLoading = true;
+        var result = await noteRepository.SaveNoteAsync(Note);
+        SweetAlertOptions options = new();
+        options.Text = result.Item2;
+
+        if (result.Item1)
+        {
+            options.Title = "Added";
+            options.Icon = SweetAlertIcon.Success;
+        }
+        else
+        {
+            options.Title = "Oops..";
+            options.Icon = SweetAlertIcon.Error;
+        }
+        Note = new Note();
+        StateHasChanged();
+        await Swal.FireAsync(options);
+    }
+}
