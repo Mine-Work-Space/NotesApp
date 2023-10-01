@@ -1,4 +1,5 @@
 using Blazored.LocalStorage;
+using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,11 @@ builder.Services.AddDbContext<DbManager>(
 // LocalStorage for themes toggle
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<INoteRepository, NoteRepository>();
+// Sweetalert lib for better UI
+builder.Services.AddSweetAlert2(options =>
+{
+    options.Theme = SweetAlertTheme.Dark;
+});
 
 var app = builder.Build();
 

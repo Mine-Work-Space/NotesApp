@@ -1,4 +1,5 @@
-﻿@inherits LayoutComponentBase
+﻿@using NotesApp.Pages;
+@inherits LayoutComponentBase
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 
 <PageTitle>Notes sharing</PageTitle>
@@ -9,7 +10,9 @@
     </div>
     <input class="mx-auto my-input form-control w-90 text-decoration-none border rounded-2"
              type="text" placeholder="Enter search term">
-    <h5 class="text-nowrap px-3 ms-5 navbar-brand col-sm-3 col-md-2 mr-0 w-10 text-white mt-2">Total notes: 100</h5>
+    <h5 class="text-nowrap px-3 ms-5 navbar-brand col-sm-3 col-md-2 mr-0 w-10 text-white mt-2">
+        Total notes: 100
+    </h5>
 </nav>
 <br/>
 <div class="my-container container mt-5">
@@ -20,41 +23,13 @@
         </main>
     </div>
 </div>
+<AddNote/>
+<div class="fixed-bottom d-flex justify-content-end m-5">
+    <button class="btn add-button btn-success d-inline-flex align-items-center p-3" data-bs-toggle="modal" data-bs-target="#addNoteModal">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="30"><path d="M11 11V5H13V11H19V13H13V19H11V13H5V11H11Z" fill="rgba(255,255,255,1)"></path></svg>
+    </button>
+</div>
+
 @code {
-    private bool toggleDark = false;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (!(await LocalStorage.ContainKeyAsync("theme")))
-        {
-            await LocalStorage.SetItemAsStringAsync("theme", "light");
-        }
-        else
-        {
-            string theme = await LocalStorage.GetItemAsStringAsync("theme");
-
-            if (theme == "dark")
-            {
-                toggleDark = true;
-            }
-            else
-            {
-                toggleDark = false;
-            }
-        }
-    }
-    public async Task ChangeTheme()
-    {
-        toggleDark = !toggleDark;
-        string theme = await LocalStorage.GetItemAsStringAsync("theme");
-
-        if (theme == "dark")
-        {
-            await LocalStorage.SetItemAsStringAsync("theme", "light");
-        }
-        else
-        {
-            await LocalStorage.SetItemAsStringAsync("theme", "dark");
-        }
-    }
 }

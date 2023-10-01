@@ -1,5 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EntityFramework.Exceptions.Common;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using NotesApp.Data;
+using NotesApp.Models.DbModels;
 using NotesApp.Models.DTO;
 using NotesApp.Repositories.Interfaces;
 
@@ -20,6 +23,25 @@ namespace NotesApp.Repositories.Implementations
                 .Skip((page - 1) * (int)pageSize)
                 .Take((int)pageSize)
                 .ToListAsync();
+        }
+
+        public async Task<(bool, string)> SaveNoteAsync(Note note)
+        {
+            try
+            {
+                note.CreationDate = DateOnly.FromDateTime(DateTime.Now);
+                await _context.Notes.AddAsync(note);
+                await _context.SaveChangesAsync();
+                return (true, "New note was successfully added!");
+            }
+            catch(UniqueConstraintException ex)
+            {
+                return (false, $"{ex.Message}. Try change title.");
+            }
+            catch (Exception ex)
+            {
+                return (false, ex.Message);
+            }
         }
     }
 }
