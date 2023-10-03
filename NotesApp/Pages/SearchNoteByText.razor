@@ -1,0 +1,46 @@
+﻿@using System.Timers;
+@implements IDisposable;
+
+<nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-2 shadow">
+    <div class="d-flex navbar-brand col-sm-3 col-md-3 mr-0 w-10 ms-5">
+        <img height="40" width="40" src="/icons/icon.svg" alt="." />
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0 w-10 ms-3" href="#">Notes Sharing</a>
+    </div>
+    <input class="mx-auto my-input form-control w-90 text-decoration-none border rounded-2" @bind="searchTermData"
+           type="text" @bind:event="oninput" @onkeyup="ResetTimer"
+           placeholder="Enter search term">
+    <h5 class="text-nowrap px-3 ms-5 navbar-brand col-sm-3 col-md-2 mr-0 w-10 text-white mt-2">
+        Total notes: @NoteCount
+    </h5>
+</nav>
+@code {
+    [Parameter] public EventCallback<string> OnNotesUpdateBySearchedParameters { get; set; }
+    [Parameter] public int NoteCount { get; set; }
+    public string searchTermData { get; set; } = string.Empty;
+    public string searchTermBackendData { get; set; } = string.Empty;
+    private Timer aTimer = default!;
+    protected override void OnInitialized()
+    {
+        aTimer = new Timer(1000);
+        aTimer.Elapsed += OnUserFinish;
+        aTimer.AutoReset = false;
+    }
+    void ResetTimer(KeyboardEventArgs e)
+    {
+        aTimer.Stop();
+        aTimer.Start();
+    }
+    private async void OnUserFinish(Object? source, ElapsedEventArgs e)
+    {
+        // https://stackoverflow.com/a/19415703/842935
+        searchTermBackendData = await Task.FromResult(searchTermData);
+        await InvokeAsync(async () =>
+        {
+            await OnNotesUpdateBySearchedParameters.InvokeAsync(searchTermBackendData);
+        });
+    }
+    void IDisposable.Dispose()
+        =>
+        aTimer?.Dispose();
+
+}

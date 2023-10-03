@@ -1,12 +1,80 @@
 ﻿@page "/"
-@using NotesApp.Models.DbModels;
 @using NotesApp.Repositories.Interfaces;
+@using System.Text.RegularExpressions;
 @inject INoteRepository NoteRepository
+
 <PageTitle>Index</PageTitle>
 
+<SearchNoteByText OnNotesUpdateBySearchedParameters="NotesUpdateBySearchedParameters" NoteCount="NoteCount"/>
+<br /> <br />
 @if (Data.Notes == null)
 {
-	<h1>Loading</h1>
+	@for (int i = 0; i < 5; i++)
+	{
+		<div class="my-card d-flex flex-column" aria-hidden="true">
+		<div class="note-title mt-2 ms-3">
+			<h3>
+				<span class="placeholder col-3"></span>	
+			</h3>
+		</div>
+		<div class="note-text p-3 text-justify text-break">
+			<p class="placeholder-glow">
+				<span class="placeholder col-4"></span> 				
+				<span class="placeholder col-7"></span>
+				<span class="placeholder col-3"></span>
+				<span class="placeholder col-6"></span>
+				<span class="placeholder col-2"></span>
+			</p>
+		</div>
+		<div class="mt-auto">
+			<hr />
+			<div class="note-footer">
+				<ul>
+					<li class="published-date placeholder-glow">
+						<span class="placeholder col-6"></span>
+						<span class="placeholder col-5"></span>
+					</li>
+					<li class="view">
+						<button class="btn purple-btn align-items-center space-between disabled placeholder col-11">
+							<span class="ms-3 my-text "></span>
+						</button>
+					</li>
+					<li class="edit">
+						<button class="btn btn-warning align-items-center space-between disabled placeholder col-11">
+							<span class="ms-3 my-text "></span>
+						</button>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	}
+}
+else if (Data.Notes.Count == 0)
+{
+	<br />
+	<div class="my-card d-flex flex-column">
+		<div class="note-title mt-2 ms-3">
+			<h3>Hmmm, no data to display...</h3>
+		</div>
+		<div class="note-text p-3 text-justify text-break">
+			<p>
+				@if (!string.IsNullOrEmpty(searchTermText))
+				{
+					<span>Any notes were found... Maybe try to search with the full word length</span>
+				}
+				else
+				{
+					<span>But... you can try adding your note and sharing it with all users!</span>
+				}
+			</p>
+		</div>
+		<div class="mt-auto">
+			<hr />
+			<div class="note-footer">
+			</div>
+		</div>
+	</div>
 }
 else
 {
@@ -14,18 +82,20 @@ else
 	{
 		<div class="my-card d-flex flex-column">
 			<div class="note-title mt-2 ms-3">
-				<h3>@note.Title</h3>
+				<h3>
+					@((MarkupString)HighlightKeyWords(note.Title, searchTermText, "#99781a"))
+				</h3>
 			</div>
 			<div class="note-text p-3 text-justify text-break">
 				<p>
-					@if(@note.Text.Length > 300)
+					@if(!string.IsNullOrEmpty(note.TextMinimized))
 					{
-						@(new string(note.Text.Take(300).ToArray()))
-						<span>...</span>
+						@((MarkupString)HighlightKeyWords(note.TextMinimized, searchTermText, "#99781a"))
+						<span>.....</span>
 					}
 					else
 					{
-						@note.Text
+						@((MarkupString)HighlightKeyWords(note.Text, searchTermText, "#99781a"))
 					}
 				</p>
 			</div>
@@ -60,61 +130,92 @@ else
 				</div>
 			</div>
 		</div>
+	}	
+	@if(Data.DisplayType == DisplayType.Default)
+	{
+		<nav aria-label="pagination">
+			<ul class="pagination justify-content-center">
+				@if (Data.CurrentPage > 1)
+				{
+					<li class="page-item">
+						<input type="button" class="page-link" value="Previous" @onclick="(async () => await LoadNotesByPageAsync(Data.CurrentPage - 1))" />
+					</li>
+				}
+				else
+				{
+					<li class="page-item disabled"><input type="button" class="page-link" value="Previous" /></li>
+				}
+				@for (var pageNumber = 1; pageNumber < Data.Pages + 1; pageNumber++)
+				{
+					var page = pageNumber;
+					<li class="page-item"><input type="button" class="page-link" @onclick="(async () => await LoadNotesByPageAsync(page))" value="@(page)" /></li>
+				}
+				@if(Data.CurrentPage < Data.Pages)
+				{
+					<li class="page-item">
+						<input type="button" class="page-link" value="Next" @onclick="(async () => await LoadNotesByPageAsync(Data.CurrentPage + 1))" />
+					</li>
+				}
+				else
+				{
+					<li class="page-item disabled"><input type="button" class="page-link" value="Next" /></li>
+				}
+			</ul>
+		</nav>
 	}
-	
-	<nav aria-label="Page navigation">
-		<ul class="pagination justify-content-center">
-			@if (Data.CurrentPage > 1)
-			{
-				<li class="page-item">
-					<input type="button" class="page-link" value="Previous" @onclick="(async () => await LoadNotesAsync(Data.CurrentPage - 1))" />
-				</li>
-			}
-			else
-			{
-				<li class="page-item"><input type="button" class="page-link" value="Previous" /></li>
-			}
-			@for (var pageNumber = 1; pageNumber < Data.Pages + 1; pageNumber++)
-			{
-				var page = pageNumber;
-				<li class="page-item"><input type="button" class="page-link" @onclick="(async () => await LoadNotesAsync(page))" value="@(page)" /></li>
-			}
-			@if(Data.CurrentPage < Data.Pages)
-			{
-				<li class="page-item">
-					<input type="button" class="page-link" value="Next" @onclick="(async () => await LoadNotesAsync(Data.CurrentPage + 1))"/>
-				</li>
-			}
-			else
-			{
-				<li class="page-item disabled"><input type="button" class="page-link" value="Next" /></li>
-			}
-		</ul>
-	</nav>
+	<div class="spinner-border text-light position-absolute top-50 start-50" style="width: 3rem; height: 3rem; visibility: @(isSearching ? "visible" : "hidden");" role="status"></div>
 }
 <AddNote />
 <div class="fixed-bottom d-flex justify-content-end m-5">
-	<button class="btn add-button btn-success d-inline-flex align-items-center p-3" Data-bs-toggle="modal" Data-bs-target="#addNoteModal">
+	<button class="btn add-button btn-success d-inline-flex align-items-center p-3" data-bs-toggle="modal" data-bs-target="#addNoteModal"
+			data-container="body" data-toggle="popover" data-placement="top" data-content="Add new note.">
 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="30"><path d="M11 11V5H13V11H19V13H13V19H11V13H5V11H11Z" fill="rgba(255,255,255,1)"></path></svg>
 	</button>
 </div>
-
 @code {
 	NotesList Data = new NotesList();
 	DateOnly today = DateOnly.FromDateTime(DateTime.Now);
+	private bool isSearching = false;
+	string searchTermText = string.Empty;
+	public int NoteCount = 0;
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		if(firstRender)
-			await LoadNotesAsync(1);
+		{
+			await LoadNotesByPageAsync(1);
+			NoteCount = NoteRepository.NoteCount;
+		}
+	}
+	public async void NotesUpdateBySearchedParameters(string searchTerm)
+	{
+		isSearching = true;
+		searchTermText = searchTerm;
+
+		if (!string.IsNullOrEmpty(searchTerm))
+			Data = await NoteRepository.GetNotesBySearchTermAsync(searchTerm);
+		else
+			Data = await NoteRepository.GetNotesAsync(1);
+		NoteCount = NoteRepository.NoteCount;
+		isSearching = false;
+		await InvokeAsync(StateHasChanged);
 	}
 
-	async Task LoadNotesAsync(int page)
+	async Task LoadNotesByPageAsync(int page)
 	{
 		if (page != Data.CurrentPage)
 		{
 			Data = await NoteRepository.GetNotesAsync(page, 5);
-			StateHasChanged();
+			NoteCount = NoteRepository.NoteCount;
+			await InvokeAsync(StateHasChanged);
 		}
 	}
+	private string HighlightKeyWords(string text, string keyword, string cssClass)
+	{
+		if (text == String.Empty || keyword == String.Empty || cssClass == String.Empty)
+			return text;
+		return Regex.Replace(text, keyword, 
+			string.Format("<span style=\"background-color:{0}\">{1}</span>",						
+			cssClass, "$0"), RegexOptions.IgnoreCase);
 
+	}
 }

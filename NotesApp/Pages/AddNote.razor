@@ -1,4 +1,4 @@
-﻿@using NotesApp.Models.DbModels;
+﻿@using NotesApp.Models;
 @using NotesApp.Repositories.Implementations;
 @using NotesApp.Repositories.Interfaces;
 @inject SweetAlertService Swal;
@@ -56,6 +56,7 @@
             options.Icon = SweetAlertIcon.Error;
         }
         Note = new Note();
+        isLoading = false;
         StateHasChanged();
         await Swal.FireAsync(options);
     }
