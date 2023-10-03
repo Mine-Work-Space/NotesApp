@@ -113,6 +113,9 @@ hr {
     background: #e879f9;
 }
 
+.published-date {
+    width: 100px;
+}
 @media screen and (max-device-width: 1400px) and (max-device-width: 768px) {
     .my-text {
         display: none;

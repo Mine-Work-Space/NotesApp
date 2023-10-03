@@ -2,19 +2,21 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NotesApp.Data;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using NpgsqlTypes;
 
 #nullable disable
 
 namespace NotesApp.Migrations
 {
     [DbContext(typeof(DbManager))]
-    partial class DbManagerModelSnapshot : ModelSnapshot
+    [Migration("20231003173915_TsVectorIndexingMigration")]
+    partial class TsVectorIndexingMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,12 +34,6 @@ namespace NotesApp.Migrations
                     b.Property<DateOnly>("CreationDate")
                         .HasColumnType("date");
 
-                    b.Property<NpgsqlTsVector>("SearchVector")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("tsvector")
-                        .HasAnnotation("Npgsql:TsVectorConfig", "english")
-                        .HasAnnotation("Npgsql:TsVectorProperties", new[] { "Title", "Text" });
-
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasMaxLength(8192)
@@ -49,9 +45,10 @@ namespace NotesApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SearchVector");
+                    b.HasIndex("Title", "Text")
+                        .HasAnnotation("Npgsql:TsVectorConfig", "english");
 
-                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("SearchVector"), "GIN");
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("Title", "Text"), "GIN");
 
                     b.ToTable("Notes");
                 });
