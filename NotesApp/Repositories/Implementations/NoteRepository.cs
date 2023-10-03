@@ -15,14 +15,22 @@ namespace NotesApp.Repositories.Implementations
         {
             _context = context;
         }
-        public async Task<List<NoteDTO>> GetNotesAsync(int page, float pageSize = 10f)
+        public async Task<NotesList> GetNotesAsync(int page, float pageSize = 10f)
         {
+            var query = _context.Set<Note>();
+
             var pageCount = Math.Ceiling(_context.Notes.Count() / pageSize);
-            return await _context.Notes
-                .Select(note => new NoteDTO() { CreationDate = note.CreationDate, Id = note.Id, Text = note.Text, Title = note.Title })
+            var notes = await _context.Notes
+                .OrderBy(n => n.CreationDate)
                 .Skip((page - 1) * (int)pageSize)
                 .Take((int)pageSize)
                 .ToListAsync();
+            return new NotesList()
+            {
+                Notes = notes.ToList(),
+                CurrentPage = page,
+                Pages = (int)pageCount
+            };
         }
 
         public async Task<(bool, string)> SaveNoteAsync(Note note)

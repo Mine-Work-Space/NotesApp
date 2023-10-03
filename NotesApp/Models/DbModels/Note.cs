@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using NotesApp.Models.DTO;
+using System.ComponentModel.DataAnnotations;
 
 namespace NotesApp.Models.DbModels
 {
@@ -17,4 +18,10 @@ namespace NotesApp.Models.DbModels
         [DataType(DataType.Date)]
         public DateOnly CreationDate { get; set; }
     }
+	public class NotesList
+	{
+		public List<Note>? Notes { get; set; }
+		public int Pages { get; set; }
+		public int CurrentPage { get; set; }
+	}
 }

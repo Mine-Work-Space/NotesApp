@@ -1,5 +1,7 @@
 ﻿@using NotesApp.Pages;
+@using System.Timers;
 @inherits LayoutComponentBase
+@* @implements IDisposable; *@
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 
 <PageTitle>Notes sharing</PageTitle>
@@ -8,28 +10,64 @@
         <img height="40" width="40" src="/icons/icon.svg" alt="."/>
         <a class="navbar-brand col-sm-3 col-md-2 mr-0 w-10 ms-3" href="#">Notes Sharing</a>
     </div>
-    <input class="mx-auto my-input form-control w-90 text-decoration-none border rounded-2"
-             type="text" placeholder="Enter search term">
+    <input class="mx-auto my-input form-control w-90 text-decoration-none border rounded-2" @bind="searchTermData"
+             type="text" @bind:event="oninput" @onkeyup="@ResetTimer"
+             placeholder="Enter search term">
     <h5 class="text-nowrap px-3 ms-5 navbar-brand col-sm-3 col-md-2 mr-0 w-10 text-white mt-2">
         Total notes: 100
     </h5>
+    <p class="text-nowrap px-3 ms-5 navbar-brand col-sm-3 col-md-2 mr-0 w-10 text-white mt-2">
+        Backend Data: @searchTermBackendData
+    </p>
 </nav>
 <br/>
 <div class="my-container container mt-5">
     <div class="row">
         <br/>
+        <br/>
         <main role="main" class="ml-sm-auto col-lg-12 px-4">
             @Body
+            
+            
+            
+            <div class="modal fade" id="addNoteModal" style="background: #2c3b4f; " tabindex="-1" aria-labelledby="addNoteLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content" style="background:#f2f2f2 !important">
+                    </div>
+                </div>
+            </div>
+        
+        
         </main>
     </div>
 </div>
-<AddNote/>
-<div class="fixed-bottom d-flex justify-content-end m-5">
-    <button class="btn add-button btn-success d-inline-flex align-items-center p-3" data-bs-toggle="modal" data-bs-target="#addNoteModal">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="30"><path d="M11 11V5H13V11H19V13H13V19H11V13H5V11H11Z" fill="rgba(255,255,255,1)"></path></svg>
-    </button>
-</div>
-
 @code {
-
+    public string searchTermData { get; set; } = string.Empty;
+    public string searchTermBackendData { get; set; } = string.Empty;
+    private Timer aTimer = default!;
+    private bool isSearching = false;
+    protected override void OnInitialized()
+    {
+        aTimer = new Timer(1000);
+        aTimer.Elapsed += OnUserFinish;
+        aTimer.AutoReset = false;
+    }
+    void ResetTimer(KeyboardEventArgs e)
+    {
+        aTimer.Stop();
+        aTimer.Start();
+    }
+    private async void OnUserFinish(Object? source, ElapsedEventArgs e)
+    {
+        // https://stackoverflow.com/a/19415703/842935
+        searchTermBackendData = await Task.FromResult(searchTermData);
+        if(!string.IsNullOrEmpty(searchTermBackendData))
+        {
+            
+        }
+        await InvokeAsync(StateHasChanged);
+    }
+    // void IDisposable.Dispose()
+    //     =>
+    //     aTimer?.Dispose();
 }
