@@ -13,6 +13,6 @@ namespace NotesApp.Data
             // For getting concrete Exception message, not DbException
             // See details https://github.com/Giorgi/EntityFramework.Exceptions
             optionsBuilder.UseExceptionProcessor();
-        }
-    }
+		}
+	}
 }

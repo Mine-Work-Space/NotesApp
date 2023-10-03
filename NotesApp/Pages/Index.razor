@@ -1,26 +1,49 @@
 ﻿@page "/"
-
+@using NotesApp.Models.DbModels;
+@using NotesApp.Repositories.Interfaces;
+@inject INoteRepository NoteRepository
 <PageTitle>Index</PageTitle>
-@if(Notes == null)
+
+@if (Data.Notes == null)
 {
 	<h1>Loading</h1>
 }
 else
 {
-	@foreach (var note in GetNotes())
+	@foreach (var note in Data.Notes)
 	{
 		<div class="my-card d-flex flex-column">
 			<div class="note-title mt-2 ms-3">
 				<h3>@note.Title</h3>
 			</div>
 			<div class="note-text p-3 text-justify text-break">
-				<p>@note.Text</p>
+				<p>
+					@if(@note.Text.Length > 300)
+					{
+						@(new string(note.Text.Take(300).ToArray()))
+						<span>...</span>
+					}
+					else
+					{
+						@note.Text
+					}
+				</p>
 			</div>
 			<div class="mt-auto">
 				<hr/>
 				<div class="note-footer">
 					<ul>
-						<li class="published-date">2 days ago</li>
+						<li class="published-date">
+							<span> @(today.DayNumber - note.CreationDate.DayNumber) &nbsp;</span>
+							@if ((today.DayNumber - note.CreationDate.DayNumber) > 1)
+							{
+								<span>days ago</span>
+							}
+							else
+							{
+								<span>day ago</span>
+							}
+						</li>
 						<li class="view">
 							<button class="btn purple-btn d-inline-flex align-items-center">
 								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20"><path d="M1.18164 12C2.12215 6.87976 6.60812 3 12.0003 3C17.3924 3 21.8784 6.87976 22.8189 12C21.8784 17.1202 17.3924 21 12.0003 21C6.60812 21 2.12215 17.1202 1.18164 12ZM12.0003 17C14.7617 17 17.0003 14.7614 17.0003 12C17.0003 9.23858 14.7617 7 12.0003 7C9.23884 7 7.00026 9.23858 7.00026 12C7.00026 14.7614 9.23884 17 12.0003 17ZM12.0003 15C10.3434 15 9.00026 13.6569 9.00026 12C9.00026 10.3431 10.3434 9 12.0003 9C13.6571 9 15.0003 10.3431 15.0003 12C15.0003 13.6569 13.6571 15 12.0003 15Z"></path></svg>
@@ -39,35 +62,59 @@ else
 		</div>
 	}
 	
-	<nav aria-label="Page navigation example">
+	<nav aria-label="Page navigation">
 		<ul class="pagination justify-content-center">
-			<li class="page-item disabled">
-				<a class="page-link" href="#" tabindex="-1">Previous</a>
-			</li>
-			<li class="page-item"><a class="page-link" href="#">1</a></li>
-			<li class="page-item"><a class="page-link" href="#">2</a></li>
-			<li class="page-item"><a class="page-link" href="#">3</a></li>
-			<li class="page-item">
-				<a class="page-link" href="#">Next</a>
-			</li>
+			@if (Data.CurrentPage > 1)
+			{
+				<li class="page-item">
+					<input type="button" class="page-link" value="Previous" @onclick="(async () => await LoadNotesAsync(Data.CurrentPage - 1))" />
+				</li>
+			}
+			else
+			{
+				<li class="page-item"><input type="button" class="page-link" value="Previous" /></li>
+			}
+			@for (var pageNumber = 1; pageNumber < Data.Pages + 1; pageNumber++)
+			{
+				var page = pageNumber;
+				<li class="page-item"><input type="button" class="page-link" @onclick="(async () => await LoadNotesAsync(page))" value="@(page)" /></li>
+			}
+			@if(Data.CurrentPage < Data.Pages)
+			{
+				<li class="page-item">
+					<input type="button" class="page-link" value="Next" @onclick="(async () => await LoadNotesAsync(Data.CurrentPage + 1))"/>
+				</li>
+			}
+			else
+			{
+				<li class="page-item disabled"><input type="button" class="page-link" value="Next" /></li>
+			}
 		</ul>
 	</nav>
 }
+<AddNote />
+<div class="fixed-bottom d-flex justify-content-end m-5">
+	<button class="btn add-button btn-success d-inline-flex align-items-center p-3" Data-bs-toggle="modal" Data-bs-target="#addNoteModal">
+		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="30"><path d="M11 11V5H13V11H19V13H13V19H11V13H5V11H11Z" fill="rgba(255,255,255,1)"></path></svg>
+	</button>
+</div>
+
 @code {
-	List<NoteDTO> Notes = new List<NoteDTO>();
-	protected override void OnInitialized()
+	NotesList Data = new NotesList();
+	DateOnly today = DateOnly.FromDateTime(DateTime.Now);
+	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
-		Notes = GetNotes();
+		if(firstRender)
+			await LoadNotesAsync(1);
 	}
 
-	List<NoteDTO> GetNotes()
+	async Task LoadNotesAsync(int page)
 	{
-		List<NoteDTO> list = new List<NoteDTO>();
-		for (int i = 0; i < 10; i++)
+		if (page != Data.CurrentPage)
 		{
-			list.Add(new NoteDTO() { Id = Guid.NewGuid(), CreationDate = new DateOnly(2023, 08, 19), Text = $"DefaultDefaultDefaultDefaultDefaultDefaultDefaultDefaultDefaultDefaultDefaultDefaultDefaultDefaultDefaultDefaultDefaultDefaultDefaultDefaultDefaultDefaultDefaultDefaultDefault text for note-{i}", Title = $"Title-{i}" });
+			Data = await NoteRepository.GetNotesAsync(page, 5);
+			StateHasChanged();
 		}
-		return list;
 	}
 
 }
