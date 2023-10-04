@@ -7,6 +7,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="/icons/icon.svg">
 
     <base href="~/" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
@@ -15,19 +16,21 @@
 </head>
 <body>
     <div id="components-reconnect-modal" class="my-reconnect-modal components-reconnect-hide">
-        <div class="show">
+        <div class="show p-5">
             <p>
-                <h1>Message when attempting to connect to server</h1>
+                <h1>Trying connect to server...</h1>
+                <div class="lds-loader"><div></div><div></div><div></div></div>
             </p>
         </div>
         <div class="failed">
             <p>
-                <h1>Message when failing to connect</h1>
+                <h1>Cannot connect the computer to the server.</h1>
             </p>
         </div>
         <div class="rejected">
             <p>
-                <h1>Message when refused</h1>
+                <h1>Rejected connection. Trying reload this page.</h1>
+                <div class="lds-loader"><div></div><div></div><div></div></div>
             </p>
         </div>
     </div>

@@ -1,15 +1,14 @@
 ﻿@page "/"
+@using NotesApp.Editors;
 @using NotesApp.Models.UI;
-@using NotesApp.Repositories.Interfaces;
 @using System.Text.RegularExpressions;
 @inject INoteRepository NoteRepository
 @inject SweetAlertService Swal;
 
-<PageTitle>Index</PageTitle>
-
+<PageTitle>Notes</PageTitle>
+@* Top navigation *@
 <SearchNoteByText OnNotesUpdateBySearchedParameters="NotesUpdateBySearchedParameters" NoteCount="NoteCount"/>
 <div class="mt-5">
-
 	@if (Data.Notes == null)
 	{
 		@for (int i = 0; i < 5; i++)
@@ -86,7 +85,7 @@
 			<div class="my-card d-flex flex-column">
 				<div class="note-title mt-2 ms-3">
 					<h3>
-						@((MarkupString)HighlightKeyWords(note.Title, searchTermText, "#99781a"))
+						@((MarkupString)TextEditor.HighlightKeyWords(note.Title, searchTermText))
 					</h3>
 				</div>
 				<div class="note-text p-3 text-justify text-break">
@@ -95,12 +94,12 @@
 						<p>
 							@if (!string.IsNullOrEmpty(note.TextMinimized))
 							{
-								@((MarkupString)HighlightKeyWords(note.TextMinimized, searchTermText, "#99781a"))
+								@((MarkupString)TextEditor.HighlightKeyWords(note.TextMinimized, searchTermText))
 								<span>.....</span>
 							}
 							else
 							{
-								@((MarkupString)HighlightKeyWords(note.Text, searchTermText, "#99781a"))
+								@((MarkupString)TextEditor.HighlightKeyWords(note.Text, searchTermText))
 							}
 						</p>
 					}
@@ -184,7 +183,7 @@
 				</ul>
 			</nav>
 		}
-		<div class="spinner-border text-light position-absolute top-50 start-50" style="width: 3rem; height: 3rem; visibility: @(isSearching ? "visible" : "hidden");" role="status"></div>
+		<div class="spinner-border my-spinner text-light position-absolute top-50 start-50" style="visibility: @(isSearching ? "visible" : "hidden");" role="status"></div>
 	}
 	<AddNote />
 	@* Add note button *@
@@ -195,12 +194,12 @@
 		</button>
 	</div>
 	@* Details modal *@
-	<div class="modal fade" id="fullTextModal" style="background: #111827; " tabindex="-1" aria-labelledby="fullTextLabel" aria-hidden="true">
+	<div class="modal fade" id="fullTextModal" tabindex="-1" aria-labelledby="fullTextLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
-			<div class="modal-content p-5" style="background:#1f2937 !important; color: white !important;">
+			<div class="modal-content p-5 details-modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title" id="fullTextLabel">@selectedNoteData.Item1</h5>
-					<button type="button" class="btn-close" style="color:wheat !important" data-bs-dismiss="modal" aria-label="Close"></button>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				@selectedNoteData.Item2
 			</div>
@@ -228,10 +227,11 @@
 	private async void ToggleEditMode(NoteUI note)
 	{
 		note.IsEditing = !note.IsEditing;
-		if(note.IsEditing)
-		{
+		if(note.IsEditing){
+			// Giving a value to the EditableText field of default Text field
 			note.EditableText = note.Text;
 		}
+
 		if(note.EditableText != note.Text && note.EditableText.Length > 2)
 		{
 			await NoteRepository.UpdateNoteAsync(new Note()
@@ -248,13 +248,12 @@
 	}
 	private void ShowFullTextNote(NoteUI note)
 	{
-		note.GetDetailsData(out selectedNoteData.title, out selectedNoteData.fullText);
+		note.Deconstruct(out selectedNoteData.title, out selectedNoteData.fullText);
 	}
 	public async void NotesUpdateBySearchedParameters(string searchTerm)
 	{
 		isSearching = true;
 		searchTermText = searchTerm;
-
 		if (!string.IsNullOrEmpty(searchTerm))
 			Data = await NoteRepository.GetNotesBySearchTermAsync(searchTerm);
 		else
@@ -271,14 +270,5 @@
 			NoteCount = NoteRepository.NoteCount;
 			await InvokeAsync(StateHasChanged);
 		}
-	}
-	private string HighlightKeyWords(string text, string keyword, string cssClass)
-	{
-		if (text == String.Empty || keyword == String.Empty || cssClass == String.Empty)
-			return text;
-		return Regex.Replace(text, keyword, 
-			string.Format("<span style=\"background-color:{0}\">{1}</span>",						
-			cssClass, "$0																						"), RegexOptions.IgnoreCase);
-
 	}
 }

@@ -1,6 +1,7 @@
 ﻿body {
     background: #111827 !important;
 }
+
 /* Style for info when server stopped or etc..*/
 .my-reconnect-modal > div {
     position: fixed;
@@ -8,41 +9,35 @@
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: 1000;
+    z-index: 1500;
     overflow: hidden;
     background-color: #fff;
     opacity: 0.8;
     text-align: center;
     font-weight: bold;
 }
-
 .components-reconnect-hide > div {
     display: none;
 }
-
 .components-reconnect-show > div {
     display: none;
 }
-
 .components-reconnect-show > .show {
     display: block;
 }
-
 .components-reconnect-failed > div {
     display: none;
 }
-
 .components-reconnect-failed > .failed {
     display: block;
 }
-
 .components-reconnect-refused > div {
     display: none;
 }
-
 .components-reconnect-refused > .refused {
     display: block;
 }
+
 /* note cards style*/
 .my-card {
     background: #1f2937;
@@ -56,21 +51,17 @@
     max-height: 400px !important;
     transition: 400ms;
 }
-
 .my-card:hover {
     box-shadow: 0px 5px 5px #34455d;
 }
-
 .note-title {
     font-weight: 400;
 }
-
 .note-footer {
     margin: 0 auto;
     padding-bottom: .125rem;
     width: 80%;
 }
-
 .note-footer ul {
     list-style: none;
     display: flex;
@@ -78,15 +69,12 @@
     justify-content: flex-end;
     padding-left: 0;
 }
-
 .note-footer li:first-child {
     margin-right: auto;
 }
-
 .note-footer li + li {
     margin-left: .5rem;
 }
-
 .note-text {
     font-size: medium;
 }
@@ -101,18 +89,15 @@
     position: relative;
     white-space: nowrap;
 }
-
 hr {
     border: 0;
     height: 1.5px;
     background-image: linear-gradient(to right, rgba(0, 0, 0, 0), #839cc3, rgba(0, 0, 0, 0));
 }
-
 .purple-btn {
     color: black;
     background: #e879f9;
 }
-
 .published-date {
     width: 100px;
 }
@@ -124,6 +109,7 @@ hr {
         margin-top: 135px !important;
     }
 }
+
 /* searching term input style */
 .my-input {
     color: white !important;
@@ -131,19 +117,77 @@ hr {
     background: #3f474f;
     transition: 400ms;
 }
-
 .my-input:focus {
     background: #5d6975;
 }
-
 input::placeholder {
     color: white !important;
     opacity: 0.2 !important;
 }
+
 /* add-button style */
 .add-button {
     transition: transform .8s ease-in-out;
 }
 .add-button:hover {
     transform: rotate(360deg);
+}
+
+/* loader */
+.lds-loader {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+.lds-loader div {
+    display: inline-block;
+    position: absolute;
+    left: 8px;
+    width: 16px;
+    background: black;
+    animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+}
+.lds-loader div:nth-child(1) {
+    left: 8px;
+    animation-delay: -0.24s;
+}
+.lds-loader div:nth-child(2) {
+    left: 32px;
+    animation-delay: -0.12s;
+}
+.lds-loader div:nth-child(3) {
+    left: 56px;
+    animation-delay: 0;
+}
+@keyframes lds-facebook {
+    0% {
+        top: 8px;
+        height: 64px;
+    }
+
+    50%, 100% {
+        top: 24px;
+        height: 32px;
+    }
+}
+
+/* spinner-loader when notes loading */
+.my-spinner {
+    width: 3rem;
+    height: 3rem;
+}
+
+/* details note modal */
+#fullTextModal {
+    background: #111827;
+}
+.details-modal-content {
+    background: #1f2937 !important;
+    color: white !important;
+}
+
+/* add note modal */
+#addNoteModal {
+    background: #2c3b4f;
 }

@@ -16,8 +16,12 @@
 @code {
     [Parameter] public EventCallback<string> OnNotesUpdateBySearchedParameters { get; set; }
     [Parameter] public int NoteCount { get; set; }
+    // Field entered by the user
     public string searchTermData { get; set; } = string.Empty;
+    // Field with input delay and interval of 1000.
+    // Prevents notes from loading each time the user enters search term data.
     public string searchTermBackendData { get; set; } = string.Empty;
+
     private Timer aTimer = default!;
     protected override void OnInitialized()
     {
@@ -32,6 +36,7 @@
     }
     private async void OnUserFinish(Object? source, ElapsedEventArgs e)
     {
+        // Interval elapsed - trying search notes. 
         // https://stackoverflow.com/a/19415703/842935
         searchTermBackendData = await Task.FromResult(searchTermData);
         await InvokeAsync(async () =>
@@ -42,5 +47,4 @@
     void IDisposable.Dispose()
         =>
         aTimer?.Dispose();
-
 }

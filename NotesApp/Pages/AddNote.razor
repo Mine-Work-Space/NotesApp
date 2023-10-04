@@ -4,9 +4,9 @@
 @inject SweetAlertService Swal;
 @inject INoteRepository noteRepository;
 
-<div class="modal fade" id="addNoteModal" style="background: #2c3b4f; " tabindex="-1" aria-labelledby="addNoteLabel" aria-hidden="true">
+<div class="modal fade" id="addNoteModal" tabindex="-1" aria-labelledby="addNoteLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content" style="background:#f2f2f2 !important">
+        <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addNoteLabel">Add new note</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -42,6 +42,7 @@
     {
         isLoading = true;
         var result = await noteRepository.SaveNoteAsync(Note);
+        
         SweetAlertOptions options = new();
         options.Text = result.Item2;
 
@@ -55,9 +56,10 @@
             options.Title = "Oops..";
             options.Icon = SweetAlertIcon.Error;
         }
+
         Note = new Note();
         isLoading = false;
-        StateHasChanged();
+        await InvokeAsync(StateHasChanged);
         await Swal.FireAsync(options);
     }
 }
