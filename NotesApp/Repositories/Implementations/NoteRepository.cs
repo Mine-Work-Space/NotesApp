@@ -36,10 +36,15 @@ namespace NotesApp.Repositories.Implementations
 
 		public async Task<NotesList> GetNotesBySearchTermAsync(string searchTerm)
 		{
+            //var s = EF.Functions.PlainToTsQuery(searchTerm);
 			var notes = await _context.Notes
-	            .Where(p => p.SearchVector.Matches(searchTerm))
+	            .Where(p => p.SearchVector.Matches(EF.Functions.PlainToTsQuery(searchTerm)))
 	            .ToListAsync();
-
+            if(!notes.Any()) 
+            {
+				// NpgsqlTsVector has no matches. Trying that method - slower but returns more results
+				notes = await FindNotesWithEfCore(searchTerm);
+            }
 			return new NotesList()
 			{
 				Notes = notes,
@@ -47,6 +52,12 @@ namespace NotesApp.Repositories.Implementations
 				Pages = 0,
 				DisplayType = DisplayType.SearchingByText
 			};
+		}
+        private async Task<List<Note>> FindNotesWithEfCore(string searchTerm)
+        {
+            return await _context.Notes
+                .Where(n => n.Title.Contains(searchTerm) || n.Text.Contains(searchTerm))
+                .ToListAsync();
 		}
 		public async Task<(bool, string)> SaveNoteAsync(Note note)
         {
