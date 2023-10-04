@@ -61,7 +61,7 @@ else if (Data.Notes.Count == 0)
 			<p>
 				@if (!string.IsNullOrEmpty(searchTermText))
 				{
-					<span>Any notes were found... Maybe try to search with the full word length</span>
+					<span>Any notes were found... Maybe try to search with the part of word. Like: </span>
 				}
 				else
 				{
@@ -134,7 +134,7 @@ else
 	@if(Data.DisplayType == DisplayType.Default)
 	{
 		<nav aria-label="pagination">
-			<ul class="pagination justify-content-center">
+			<ul class="pagination justify-content-center flex-wrap">
 				@if (Data.CurrentPage > 1)
 				{
 					<li class="page-item">
