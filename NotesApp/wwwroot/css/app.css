@@ -53,7 +53,7 @@
     box-shadow: 0px 10px 30px #111827;
     margin: 23px 5px;
     width: 100%;
-    min-height: 10%;
+    max-height: 400px !important;
     transition: 400ms;
 }
 
