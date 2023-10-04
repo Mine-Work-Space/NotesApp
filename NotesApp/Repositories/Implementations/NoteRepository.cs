@@ -5,7 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
 using NotesApp.Data;
 using NotesApp.Models;
+using NotesApp.Models.UI;
 using NotesApp.Repositories.Interfaces;
+using System.Reflection.Metadata.Ecma335;
 
 namespace NotesApp.Repositories.Implementations
 {
@@ -21,9 +23,15 @@ namespace NotesApp.Repositories.Implementations
         {
             var pageCount = GetPageCount(pageSize);
 			var notes = await _context.Notes
-                .OrderBy(n => n.CreationDate)
                 .Skip((page - 1) * (int)pageSize)
                 .Take((int)pageSize)
+                .Select(n => new NoteUI()
+                {
+                    Id = n.Id,
+                    Title = n.Title,
+                    Text = n.Text,
+                    CreationDate = n.CreationDate
+                })
                 .ToListAsync();
             return new NotesList()
             {
@@ -39,7 +47,14 @@ namespace NotesApp.Repositories.Implementations
             //var s = EF.Functions.PlainToTsQuery(searchTerm);
 			var notes = await _context.Notes
 	            .Where(p => p.SearchVector.Matches(EF.Functions.PlainToTsQuery(searchTerm)))
-	            .ToListAsync();
+				.Select(n => new NoteUI()
+				{
+					Id = n.Id,
+					Title = n.Title,
+					Text = n.Text,
+					CreationDate = n.CreationDate
+				})
+				.ToListAsync();
             if(!notes.Any()) 
             {
 				// NpgsqlTsVector has no matches. Trying that method - slower but returns more results
@@ -53,11 +68,18 @@ namespace NotesApp.Repositories.Implementations
 				DisplayType = DisplayType.SearchingByText
 			};
 		}
-        private async Task<List<Note>> FindNotesWithEfCore(string searchTerm)
+        private async Task<List<NoteUI>> FindNotesWithEfCore(string searchTerm)
         {
             return await _context.Notes
                 .Where(n => n.Title.Contains(searchTerm) || n.Text.Contains(searchTerm))
-                .ToListAsync();
+				.Select(n => new NoteUI()
+				{
+					Id = n.Id,
+					Title = n.Title,
+					Text = n.Text,
+					CreationDate = n.CreationDate
+				})
+				.ToListAsync();
 		}
 		public async Task<(bool, string)> SaveNoteAsync(Note note)
         {
@@ -82,5 +104,19 @@ namespace NotesApp.Repositories.Implementations
             NoteCount = _context.Notes.Count();
 			return (int)Math.Ceiling(NoteCount / pageSize);
         }
-    }
+
+		public async Task<bool> UpdateNoteAsync(Note note)
+		{
+            try
+            {
+                _context.Update(note);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+		}
+	}
 }
