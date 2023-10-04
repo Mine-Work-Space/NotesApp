@@ -1,24 +1,20 @@
 ﻿using EntityFramework.Exceptions.Common;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
 using NotesApp.Data;
 using NotesApp.Models;
 using NotesApp.Models.UI;
 using NotesApp.Repositories.Interfaces;
-using System.Reflection.Metadata.Ecma335;
 
 namespace NotesApp.Repositories.Implementations
 {
-    public class NoteRepository : INoteRepository
+	/// <inheritdoc />
+	public sealed class NoteRepository : INoteRepository
     {
         private DbManager _context;
         public int NoteCount { get;  private set; }
-        public NoteRepository(DbManager context)
-        {
-            _context = context;
-		}
+
+        public NoteRepository(DbManager context) => _context = context;
+
         public async Task<NotesList> GetNotesAsync(int page, float pageSize = 5f)
         {
             var pageCount = GetPageCount(pageSize);
@@ -41,7 +37,6 @@ namespace NotesApp.Repositories.Implementations
                 DisplayType = DisplayType.Default
 			};
         }
-
 		public async Task<NotesList> GetNotesBySearchTermAsync(string searchTerm)
 		{
             //var s = EF.Functions.PlainToTsQuery(searchTerm);
@@ -104,7 +99,6 @@ namespace NotesApp.Repositories.Implementations
             NoteCount = _context.Notes.Count();
 			return (int)Math.Ceiling(NoteCount / pageSize);
         }
-
 		public async Task<bool> UpdateNoteAsync(Note note)
 		{
             try
