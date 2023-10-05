@@ -6,6 +6,10 @@
 
 To see project as template without any data (Database for PostgreSQL is expensive), check out [NotesApp demo view](https://blazornote.azurewebsites.net/)
 
+## How it works
+[![Watch the video](https://youtu.be/T-D1KVIuvjA)]((https://www.youtube.com/watch?v=HaIpDdae0U0))
+
+
 ## Getting Started
 
 To get started with NoteApp and build project on your own machine, look at my recommendations below.
