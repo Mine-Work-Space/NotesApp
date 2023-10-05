@@ -1,14 +1,13 @@
 ﻿@page "/"
-@using NotesApp.Editors;
-@using NotesApp.Models.UI;
-@using System.Text.RegularExpressions;
 @inject INoteRepository NoteRepository
+@inject IMapper Mapper;
 @inject SweetAlertService Swal;
 
 <PageTitle>Notes</PageTitle>
 @* Top navigation *@
 <SearchNoteByText OnNotesUpdateBySearchedParameters="NotesUpdateBySearchedParameters" NoteCount="NoteCount"/>
 <div class="mt-5">
+	@* Loading notes skeletons. *@
 	@if (Data.Notes == null)
 	{
 		@for (int i = 0; i < 5; i++)
@@ -52,6 +51,7 @@
 		</div>
 		}
 	}
+	@* No data, empty note list. *@
 	else if (Data.Notes.Count == 0)
 	{
 		<br />
@@ -63,7 +63,7 @@
 				<p>
 					@if (!string.IsNullOrEmpty(searchTermText))
 					{
-						<span>Any notes were found... Maybe try to search with the part of word. Like: </span>
+						<span>Any notes were found... Maybe try to search with the part of word. </span>
 					}
 					else
 					{
@@ -78,6 +78,7 @@
 			</div>
 		</div>
 	}
+	@* Displaying list *@
 	else
 	{
 		@foreach (var note in Data.Notes)
@@ -151,6 +152,7 @@
 				</div>
 			</div>
 		}	
+		@* If user is searching notes by searchTerm, pagination not avaible *@
 		@if(Data.DisplayType == DisplayType.Default)
 		{
 			<nav aria-label="pagination">
@@ -185,7 +187,7 @@
 		}
 		<div class="spinner-border my-spinner text-light position-absolute top-50 start-50" style="visibility: @(isSearching ? "visible" : "hidden");" role="status"></div>
 	}
-	<AddNote />
+	<AddNote OnNotesUpdateWithAddedNote="NotesUpdateWithAddedNote" />
 	@* Add note button *@
 	<div class="fixed-bottom d-flex justify-content-end m-5">
 		<button class="btn add-button btn-success d-inline-flex align-items-center p-3" data-bs-toggle="modal" data-bs-target="#addNoteModal"
@@ -201,7 +203,7 @@
 					<h5 class="modal-title" id="fullTextLabel">@selectedNoteData.Item1</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
-				@selectedNoteData.Item2
+				<p>@selectedNoteData.Item2</p>
 			</div>
 		</div>
 	</div>
@@ -209,47 +211,54 @@
 
 @code {
 	NotesList Data = new NotesList();
+	// For displaying how many days passed from moment note was added
 	DateOnly today = DateOnly.FromDateTime(DateTime.Now);
+	// User-friendly loading circle when user trying to find note
 	private bool isSearching = false;
+	// Words to find
 	string searchTermText = string.Empty;
 	public int NoteCount = 0;
-	private string EditButtonText = "Edit";
-	private string textBuff = string.Empty;
+	// For displaying details data in #fullTextModal 
 	(string title, string fullText) selectedNoteData;
+
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		if(firstRender)
 		{
-			await LoadNotesByPageAsync(1);
+			await LoadNotesByPageAsync(page: 1);
 			NoteCount = NoteRepository.NoteCount;
 		}
 	}
+	// Method to show editable text in <textarea> from selected note 
 	private async void ToggleEditMode(NoteUI note)
 	{
 		note.IsEditing = !note.IsEditing;
-		if(note.IsEditing){
+		if(note.IsEditing) {
 			// Giving a value to the EditableText field of default Text field
 			note.EditableText = note.Text;
 		}
 
-		if(note.EditableText != note.Text && note.EditableText.Length > 2)
+		if(note.EditableText != note.Text && note.EditableText.Length > 5)
 		{
-			await NoteRepository.UpdateNoteAsync(new Note()
-				{
-					CreationDate = note.CreationDate,
-					Title = note.Title,
-					Id = note.Id,
-					Text = note.EditableText
-				});
-			note.Text = note.EditableText;
-			await InvokeAsync(StateHasChanged);
-			await Swal.FireAsync($"{note.Title} updated!");
+			bool success = await NoteRepository.UpdateNoteAsync(Mapper.Map<Note>(note));
+			if(success)
+			{
+				note.Text = note.EditableText;
+				await InvokeAsync(StateHasChanged);
+				await Swal.FireAsync($"{note.Title} updated!");
+			}
+			else
+			{
+				await Swal.FireAsync("Oops", "Something went wrong..", SweetAlertIcon.Error);
+			}
 		}
 	}
+	// Set values to selectedNoteData and show details in modal #fullTextModal
 	private void ShowFullTextNote(NoteUI note)
 	{
 		note.Deconstruct(out selectedNoteData.title, out selectedNoteData.fullText);
 	}
+	// Updating the list of notes by the searched word
 	public async void NotesUpdateBySearchedParameters(string searchTerm)
 	{
 		isSearching = true;
@@ -257,16 +266,27 @@
 		if (!string.IsNullOrEmpty(searchTerm))
 			Data = await NoteRepository.GetNotesBySearchTermAsync(searchTerm);
 		else
-			Data = await NoteRepository.GetNotesAsync(1);
+			Data = await NoteRepository.GetNotesByPageAsync(1);
 		NoteCount = NoteRepository.NoteCount;
 		isSearching = false;
 		await InvokeAsync(StateHasChanged);
 	}
-	async Task LoadNotesByPageAsync(int page)
+	// Allows not to completely update the list of notes
+	// Shows the user that a note has been added
+	public async void NotesUpdateWithAddedNote(Note addedNote)
+	{
+		if(Data.Notes == null)
+			Data.Notes = new List<NoteUI>();
+
+		Data.Notes.Add(Mapper.Map<NoteUI>(addedNote));
+		await InvokeAsync(StateHasChanged);
+	}
+	// Update notes list if page was changed
+	private async Task LoadNotesByPageAsync(int page)
 	{
 		if (page != Data.CurrentPage)
 		{
-			Data = await NoteRepository.GetNotesAsync(page, 5);
+			Data = await NoteRepository.GetNotesByPageAsync(page, 5);
 			NoteCount = NoteRepository.NoteCount;
 			await InvokeAsync(StateHasChanged);
 		}

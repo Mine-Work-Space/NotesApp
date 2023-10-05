@@ -45,7 +45,8 @@ namespace NotesApp.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.HasKey("Id");
 
@@ -53,8 +54,8 @@ namespace NotesApp.Migrations
 
                     NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("SearchVector"), "GIN");
 
-                    b.ToTable("Notes", (string)null);
-				});
+                    b.ToTable("Notes");
+                });
 #pragma warning restore 612, 618
         }
     }

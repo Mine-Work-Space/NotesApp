@@ -1,14 +1,12 @@
 ﻿using EntityFramework.Exceptions.PostgreSQL;
 using Microsoft.EntityFrameworkCore;
 using NotesApp.Models;
-using System.Reflection.Metadata;
-using System.Text;
 
 namespace NotesApp.Data
 {
 	public class DbManager : DbContext
 	{
-        public DbManager(DbContextOptions<DbManager> options) : base(options) { }
+		public DbManager(DbContextOptions<DbManager> options) : base(options) { }
 		public DbSet<Note> Notes { get; set; }
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
@@ -21,10 +19,10 @@ namespace NotesApp.Data
 			modelBuilder.Entity<Note>()
 			.HasGeneratedTsVectorColumn(
 					p => p.SearchVector,
-					"english",							// Text search config
-					n => new { n.Title, n.Text})		// Included properties
+					"english",                          // Text search config
+					n => new { n.Title, n.Text })       // Included properties
 					.HasIndex(p => p.SearchVector)
-					.HasMethod("GIN");					// Index method on the search vector (GIN)
+					.HasMethod("GIN");                  // Index method on the search vector (GIN)
 		}
 	}
 }

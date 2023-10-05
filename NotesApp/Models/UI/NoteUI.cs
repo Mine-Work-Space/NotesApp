@@ -40,7 +40,7 @@
 		public int CurrentPage { get; set; }
 		public DisplayType DisplayType { get; set; }
 	}
-	public enum DisplayType 
+	public enum DisplayType
 	{
 		/// <summary>
 		///		Displaying notes without pagination navbar
@@ -49,6 +49,6 @@
 		/// <summary>
 		///		Displaying notes with pagination navbar
 		/// </summary>
-		Default 
+		Default
 	}
 }
