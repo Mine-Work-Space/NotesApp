@@ -41,3 +41,5 @@ app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
 app.Run();
+// For tests
+public partial class Program { }
