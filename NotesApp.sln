@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotesApp.Tests", "NotesApp.Tests\NotesApp.Tests.csproj", "{FEC299A5-C20D-4F74-8634-C76D569DBBB9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{C8FC520F-C552-4DFB-807B-FC3AD6088615}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8FC520F-C552-4DFB-807B-FC3AD6088615}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C8FC520F-C552-4DFB-807B-FC3AD6088615}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEC299A5-C20D-4F74-8634-C76D569DBBB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEC299A5-C20D-4F74-8634-C76D569DBBB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEC299A5-C20D-4F74-8634-C76D569DBBB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEC299A5-C20D-4F74-8634-C76D569DBBB9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
