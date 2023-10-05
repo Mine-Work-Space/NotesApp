@@ -39,7 +39,7 @@ namespace NotesApp.Tests.Repositories.Implementations
 		public async void UpdateNoteAsync_ShouldReturnTrue()
 		{
 			// Arrange
-			var notes = await NoteRepository.GetNotesAsync(1, 1);
+			var notes = await NoteRepository.GetNotesByPageAsync(1, 1);
 			var editableNote = notes.Notes!.FirstOrDefault();
 			// Act
 			editableNote!.Text = "Edited text";

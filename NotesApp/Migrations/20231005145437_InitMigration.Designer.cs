@@ -13,8 +13,8 @@ using NpgsqlTypes;
 namespace NotesApp.Migrations
 {
     [DbContext(typeof(DbManager))]
-    [Migration("20231003193716_AnotherMethodIndexingTitleTextMigration")]
-    partial class AnotherMethodIndexingTitleTextMigration
+    [Migration("20231005145437_InitMigration")]
+    partial class InitMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,7 +48,8 @@ namespace NotesApp.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.HasKey("Id");
 

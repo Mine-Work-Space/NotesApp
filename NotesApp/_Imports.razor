@@ -1,4 +1,5 @@
 ﻿@using System.Net.Http
+@using System.Text.RegularExpressions;
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.Forms
@@ -9,5 +10,8 @@
 @using NotesApp
 @using NotesApp.Shared
 @using NotesApp.Models
+@using NotesApp.Editors;
+@using NotesApp.Models.UI;
 @using NotesApp.Repositories.Interfaces
 @using CurrieTechnologies.Razor.SweetAlert2
+@using AutoMapper;

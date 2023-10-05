@@ -3,8 +3,8 @@ using NotesApp.Models.UI;
 
 namespace NotesApp.Repositories.Interfaces
 {
-    public interface INoteRepository
-    {
+	public interface INoteRepository
+	{
 		/// <summary>
 		///		Last updated count of notes. Can not be set
 		/// </summary>
@@ -13,7 +13,7 @@ namespace NotesApp.Repositories.Interfaces
 		///		Notes with <paramref name="pageSize"/> amount and <paramref name="page"/> page 
 		/// </summary>
 		/// <param name="page">
-		///		notes page to download
+		///		notes page to download. <c>must be >= 1</c>
 		/// </param>
 		/// <param name="pageSize">
 		///		count of notes on one page
@@ -21,7 +21,7 @@ namespace NotesApp.Repositories.Interfaces
 		/// <returns>
 		///		<see cref="NotesList"/> with notes, total pages, current page and enum <see cref="DisplayType"/>
 		/// </returns>
-		Task<NotesList> GetNotesAsync(int page, float pageSize = 5f);
+		Task<NotesList> GetNotesByPageAsync(int pages, float pageSize = 5f);
 		/// <summary>
 		///		Notes in which the searched word was found
 		/// </summary>
@@ -45,12 +45,12 @@ namespace NotesApp.Repositories.Interfaces
 		/// <summary>
 		///		Update existing note
 		/// </summary>
-		/// <param name="note">
+		/// <param name="updatedNote">
 		///		updated model
 		/// </param>
 		/// <returns>
 		///		<see cref="Boolean"/> true if note updated successfully, false if not
 		/// </returns>
-		Task<bool> UpdateNoteAsync(Note note);
-    }
+		Task<bool> UpdateNoteAsync(Note updatedNote);
+	}
 }

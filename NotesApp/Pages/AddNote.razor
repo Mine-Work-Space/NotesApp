@@ -1,5 +1,4 @@
 ﻿@using NotesApp.Models;
-@using NotesApp.Repositories.Implementations;
 @using NotesApp.Repositories.Interfaces;
 @inject SweetAlertService Swal;
 @inject INoteRepository noteRepository;
@@ -35,14 +34,18 @@
         </div>
     </div>
 </div>
-@code {
+@code 
+{
+    // When note added successfully, just get that note to 
+    [Parameter] public EventCallback<Note> OnNotesUpdateWithAddedNote { get; set; }
     Note Note = new();
     private bool isLoading = false;
+
     private async void HandleSubmit()
     {
         isLoading = true;
         var result = await noteRepository.SaveNoteAsync(Note);
-        
+
         SweetAlertOptions options = new();
         options.Text = result.Item2;
 
@@ -56,9 +59,16 @@
             options.Title = "Oops..";
             options.Icon = SweetAlertIcon.Error;
         }
+        // Send the parent node to update the list with the added note.
+        // The user-friendly interface eliminates the need to update the list to see the added note.
+        await InvokeAsync(async () =>
+        {
+            await OnNotesUpdateWithAddedNote.InvokeAsync(Note);
+        });
 
         Note = new Note();
         isLoading = false;
+
         await InvokeAsync(StateHasChanged);
         await Swal.FireAsync(options);
     }

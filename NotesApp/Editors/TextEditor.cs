@@ -2,10 +2,10 @@
 
 namespace NotesApp.Editors
 {
-    //
-    // Summary:
-    //     Provides static method for words selection
-    public static class TextEditor
+	//
+	// Summary:
+	//     Provides static method for words selection
+	public static class TextEditor
 	{
 		/// <summary>
 		/// Finds a keyword in a text and highlights it
