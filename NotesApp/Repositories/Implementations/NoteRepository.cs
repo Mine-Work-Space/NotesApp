@@ -54,7 +54,7 @@ namespace NotesApp.Repositories.Implementations
 					.Where(p => p.SearchVector.Matches(EF.Functions.PlainToTsQuery(searchTerm)))
 					.Select(n => _mapper.Map<NoteUI>(n))
 					.ToListAsync();
-				if (!notes.Any() && searchTerm.Length > 5)
+				if (!notes.Any() && searchTerm.Length > 2)
 				{
 					// NpgsqlTsVector has no matches. Trying that method - slower but returns more results
 					notes = await FindNotesWithEfCore(searchTerm);
@@ -76,7 +76,8 @@ namespace NotesApp.Repositories.Implementations
 		private async Task<List<NoteUI>> FindNotesWithEfCore(string searchTerm)
 		{
 			return await _context.Notes
-				.Where(n => n.Title.Contains(searchTerm) || n.Text.Contains(searchTerm))
+				.Where(n => n.Title.ToLower() == searchTerm.ToLower() 
+						||	n.Text.ToLower() == searchTerm.ToLower())
 				.Select(n => _mapper.Map<NoteUI>(n))
 				.ToListAsync();
 		}
