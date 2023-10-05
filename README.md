@@ -27,7 +27,7 @@ After completed prerequisites, follow these steps:
 ```
 2. Build the project
 3. Open Package Manager Console and write ```update-database``` command. Notes table will be created in your db.
-4. :👾: Start the project.
+4. 👾 Start the project.
 
 ## Run unit tests
 
@@ -35,8 +35,17 @@ Project has simple unit tests. During the tests **another db** uses, so, to run 
 1. Set NotesApp.Tests as startup project
 2. Build the project.
 3. Start Docker. NotesApp.Tests module uses PostgreSqlContainer
-4. Change _dbContainer parametes to your own. 
-5. Run tests
+4. Change _dbContainer parametes to your own. NotesApp.Tests -> IntegrationTestNoteDbFactory. Field PostgreSqlContainer _dbContainer.
+```csharp
+		private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder()
+			.WithImage("image_name")
+			.WithDatabase("test_db_name")
+			.WithPortBinding(port_integer)
+			.WithUsername("username")
+			.WithPassword("password")
+			.Build();
+```
+6. Run tests
 
 ## Still got questions?
 
