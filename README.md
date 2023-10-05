@@ -1,45 +1,43 @@
-usage: git [-v | --version] [-h | --help] [-C <path>] [-c <name>=<value>]
-           [--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]
-           [-p | --paginate | -P | --no-pager] [--no-replace-objects] [--bare]
-           [--git-dir=<path>] [--work-tree=<path>] [--namespace=<name>]
-           [--super-prefix=<path>] [--config-env=<name>=<envvar>]
-           <command> [<args>]
+﻿# NotesApp
 
-These are common Git commands used in various situations:
+**The NotesApp is a web-based application designed to help users organize and manage their notes with ease. Built using Blazor Server, Entity Framework Core and PostgreSQL, this application offers a responsive user interface for creating, viewing, and editing notes.**
 
-start a working area (see also: git help tutorial)
-   clone     Clone a repository into a new directory
-   init      Create an empty Git repository or reinitialize an existing one
+> Note: NotesApp is an *experimental* project. It's not a commercial product. 
 
-work on the current change (see also: git help everyday)
-   add       Add file contents to the index
-   mv        Move or rename a file, a directory, or a symlink
-   restore   Restore working tree files
-   rm        Remove files from the working tree and from the index
+To see project as template without any data (Database for PostgreSQL is expensive), check out [NotesApp demo view](https://blazornote.azurewebsites.net/)
 
-examine the history and state (see also: git help revisions)
-   bisect    Use binary search to find the commit that introduced a bug
-   diff      Show changes between commits, commit and working tree, etc
-   grep      Print lines matching a pattern
-   log       Show commit logs
-   show      Show various types of objects
-   status    Show the working tree status
+## Getting Started
 
-grow, mark and tweak your common history
-   branch    List, create, or delete branches
-   commit    Record changes to the repository
-   merge     Join two or more development histories together
-   rebase    Reapply commits on top of another base tip
-   reset     Reset current HEAD to the specified state
-   switch    Switch branches
-   tag       Create, list, delete or verify a tag object signed with GPG
+To get started with NoteApp and build project on your own machine, look at my recommendations below.
 
-collaborate (see also: git help workflows)
-   fetch     Download objects and refs from another repository
-   pull      Fetch from and integrate with another repository or a local branch
-   push      Update remote refs along with associated objects
+## Building the NotesApp
 
-'git help -a' and 'git help -g' list available subcommands and some
-concept guides. See 'git help <command>' or 'git help <concept>'
-to read about a specific subcommand or concept.
-See 'git help git' for an overview of the system.
+Prerequisites:
+- [Node.js](https://nodejs.org/) (>8.3)
+- [PostgreSQL](https://www.postgresql.org/download/)
+- [Docker](https://docs.docker.com/desktop/install/mac-install/)
+
+After completed prerequisites, follow these steps:
+1. Set NotesApp as startup project
+2. Set up connection string. Change in appsettings.json DefaultConnection with your parameters
+```json 
+  "ConnectionStrings": {
+    "DefaultConnection": "USER ID=YOUR_ID; Password=YOUR_PASSWORD; Server=YOUR_SERVER; Port=YOUR_PORT; Database=DB_NAME; Integrated Security=true; Pooling=true;"
+  }
+```
+2. Build the project
+3. Open Package Manager Console and write ```update-database``` command. Notes table will be created in your db.
+4. :👾: Start the project.
+
+## Run unit tests
+
+Project has simple unit tests. During the tests **another db** uses, so, to run unit tests, follow these steps:
+1. Set NotesApp.Tests as startup project
+2. Build the project.
+3. Start Docker. NotesApp.Tests module uses PostgreSqlContainer
+4. Change _dbContainer parametes to your own. 
+5. Run tests
+
+## Still got questions?
+
+You can write me in Telegram. [sashaFPV](https://t.me/sasha_fpv).
