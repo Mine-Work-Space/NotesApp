@@ -7,8 +7,10 @@
 To see project as template without any data (Database for PostgreSQL is expensive), check out [NotesApp demo view](https://blazornote.azurewebsites.net/)
 
 ## How it works
-[![Watch the video](https://youtu.be/T-D1KVIuvjA)]((https://www.youtube.com/watch?v=HaIpDdae0U0))
+Check the video below:
 
+[<img src="https://img.youtube.com/vi/HaIpDdae0U0/hqdefault.jpg" width="700" height="400"
+/>](https://www.youtube.com/embed/HaIpDdae0U0)
 
 ## Getting Started
 
