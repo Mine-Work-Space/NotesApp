@@ -14,11 +14,13 @@ namespace NotesApp.Repositories.Implementations
 		private readonly DbManager _context;
 		public int NoteCount { get; private set; }
 		private readonly IMapper _mapper;
-		public NoteRepository(DbManager context, IMapper mapper)
+		private readonly Serilog.ILogger _logger;
+		public NoteRepository(DbManager context, IMapper mapper, Serilog.ILogger logger)
 		{
 			_context = context;
 			_mapper = mapper;
-		}
+            _logger = logger;
+        }
 
 		public async Task<NotesList> GetNotesByPageAsync(int page, float pageSize = 5f)
 		{
@@ -83,6 +85,7 @@ namespace NotesApp.Repositories.Implementations
 		}
 		public async Task<(bool, string)> SaveNoteAsync(Note note)
 		{
+			_logger.Information("\nSaveNoteAsync\n================\n");
 			try
 			{
 				note.CreationDate = DateOnly.FromDateTime(DateTime.Now);
@@ -92,7 +95,8 @@ namespace NotesApp.Repositories.Implementations
 			}
 			catch (UniqueConstraintException ex)
 			{
-				return (false, $"{ex.Message}. Try change title.");
+                _logger.Error("UniqueConstraintException", ex);
+                return (false, $"{ex.Message}. Try change title.");
 			}
 			catch (Exception ex)
 			{

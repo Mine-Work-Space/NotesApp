@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using NotesApp.Data;
 using NotesApp.Repositories.Implementations;
 using NotesApp.Repositories.Interfaces;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,17 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddDbContext<DbManager>(
 	options => options.UseNpgsql(
 		builder.Configuration.GetConnectionString("DefaultConnection")));
+// Set logging
+//Log.Logger = new LoggerConfiguration()
+//	.Enrich.FromLogContext()
+//	.WriteTo.File(@"C:\")
+//	.CreateLogger();
+builder.Services.AddSerilog(
+	new LoggerConfiguration()
+    .Enrich.FromLogContext()
+    .WriteTo.File(@"C:\log\log.txt")
+    .CreateLogger())
+	.AddTransient<NoteRepository>();
 
 builder.Services.AddScoped<INoteRepository, NoteRepository>();
 // Sweetalert lib for better UI
